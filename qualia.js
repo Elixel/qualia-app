@@ -21,7 +21,7 @@ var qualia = {
             type:           type,
             data:           data,
             contentType:    "application/json",
-            url:            url+request+"?api_key="+ak+"&username="+u,
+            url:            url+request+"/?api_key="+ak+"&username="+u,
             success:        callback,
             error:          function(a,b,c) { console.log(b); callback(c); },
             beforeSend:     function(jqXHR, settings) {
