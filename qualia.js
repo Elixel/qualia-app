@@ -8,6 +8,11 @@ var qualia = {
         ak = apikey;
     },
     api: function(request, type, data, callback) {
+        //If sending a POST to the API, convert the data JSON
+        if (type == "POST"){
+            data = JSON.stringify(data);
+        }
+
         var url = "http://qualia.org.uk/api/v1/";
         jQuery.ajax({
             dataType:       "json",
