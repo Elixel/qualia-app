@@ -22,34 +22,66 @@
         <title>Qualia</title>   
         <meta http-equiv="Content-type" content="text/html; charset=utf-8">
         <meta name="format-detection" content="telephone=no" />
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=320, height=device-height, target-densitydpi=device-dpi" />
         <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
         <link rel="stylesheet" type="text/css" href="css/af.ui.base.css"  />
         <link rel="stylesheet" type="text/css" href="css/qualia.css"  />
         
-        <script type="text/javascript" charset="utf-8" src="./appframework.js"></script>
+        <script type="text/javascript" charset="utf-8" src="./js/jquery-2.0.3.min.js"></script>
+        <script type="text/javascript" charset="utf-8" src="./jq.appframework.js"></script>
         <script type="text/javascript" charset="utf-8" src="./ui/src/appframework.ui.js"></script>
         <script type="text/javascript" charset="utf-8" src="./ui/transitions/all.js"></script>
         <script type="text/javascript" charset="utf-8" src="./plugins/af.css3animate.js"></script>
         <script type="text/javascript" charset="utf-8" src="./plugins/af.scroller.js"></script>
         <script type="text/javascript" charset="utf-8" src="./plugins/af.touchEvents.js"></script>
         <script type="text/javascript" charset="utf-8" src="./plugins/af.touchLayer.js"></script>
-        <script type="text/javascript" charset="utf-8" src="js/qualia.js"></script>
-        <script type="text/javascript" charset="utf-8" src="js/index.js"></script>
+        <script type="text/javascript" charset="utf-8" src="./js/qualia.js"></script>
+        <script type="text/javascript" charset="utf-8" src="./js/index.js"></script>
     </head>
     <body>
         <div id="afui">
-            <div id="splashscreen">
-            </div>
             <div id="header">
-                <a id="backButton" href="javascript:;" class="button" style="visibility: hidden; ">Back</a>
-                <h1 id="pageTitle">Page Title</h1>
+                
             </div>
             <div id="content">
-                <div id="main" class="panel" selected="true" title="Main">
+                <div id="main" class="panel" selected="true"><!-- DECIDE WHETHER TO GO TO LOGIN PAGE OR MOOD --></div>
+
+                <div id="login" class="panel" title="Login">
+                    <form id="login-form" onsubmit="return false;">
+                        <input id="login_email" type="email" value="a@a.com" />
+                        <input type="submit" onclick="app.login(login_email)" />
+                        <img src="img/ajax-loader.gif" style="visibility:hidden" />
+                    </form>
+                </div>
+                <div id="schedule" class="panel" title="Schedule">
+                
+                </div>
+                <div id="messaging" class="panel" title="Messaging">
+                
+                </div>
+                <div id="mood" class="panel" title="Mood">
+                    
+                </div>
+                <div id="flow" class="panel" title="Flow">
+                
+                </div>
+                <div id="information" class="panel" title="App Information">
+                
+                </div>
+                <div id="dashboard" class="panel" title="Dashboard">
+                
                 </div>
             </div>
-            <div id="menu"></div>
+           
+        </div>
+        <div id="menu">
+            <span></span>
+            <a class="radial schedule" href="schedule" title="Schedule"></a>
+            <a class="radial messaging" href="messaging" title="Messaging"></a>
+            <a class="radial mood" href="mood" title="Mood"></a>
+            <a class="radial flow" href="flow" title="Flow"></a>
+            <a class="radial information" href="information" title="App Information"></a>
+            <a class="radial dashboard" href="dashboard" title="Dashboard"></a>
         </div>
     </body>
     <script type="text/javascript">

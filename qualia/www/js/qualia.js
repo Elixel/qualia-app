@@ -23,7 +23,7 @@ var qualia = {
             contentType:    "application/json",
             url:            webEngine+request+"/?api_key="+ak+"&username="+u,
             success:        callback,
-            error:          function(a,b,c) { console.log(b); callback(c); }
+            error:          function(a,b,c) { callback(b); }
         });
     },
     // User Login
@@ -31,13 +31,18 @@ var qualia = {
     login: function(email_address, callback) {
         var that = this;
         this.api("visitor","GET",{email:email_address},function(e) {
-            if (e.meta.total_count > 0) { // email does exist
-                callback(e.objects[0].id);
-            } else { // email doesnt exist
-                that.api("visitor","POST",{email:email_address},function(e,t,r) {
-                    callback(e.id);
-                });
+            if (e != "error") {
+                if (e.meta.total_count > 0) { // email does exist
+                    callback(e.objects[0].id);
+                } else { // email doesnt exist
+                    that.api("visitor","POST",{email:email_address},function(e,t,r) {
+                        callback(e.id);
+                    });
+                }
+            } else {
+                callback(e);  
             }
         });
+            
     }
 }
