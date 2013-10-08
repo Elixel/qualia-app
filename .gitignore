@@ -1,0 +1,11 @@
+# Android
+platforms/android/bin/
+*.apk
+*.ap_
+*.dex
+*.class
+platforms/android/gen/
+local.properties
+.DS_Store
+Thumbs.db
+qualia-release-key.keystore

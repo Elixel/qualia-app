@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Qualia</title>   
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+        <meta name="format-detection" content="telephone=no" />
+        
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no"/>
+        
+        <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+        <link rel="stylesheet" type="text/css" href="css/af.ui.base.css"  />
+        <link rel="stylesheet" type="text/css" href="css/index.css"  />
+        <link rel="stylesheet" type="text/css" href="css/cache.css"  />
+        
+        <script type="text/javascript">
+        if (navigator.userAgent.toLowerCase().match(/android/)) { 
+            document.write('<script charset="utf-8" src="./js/cdv/cordova-2.5.0-Android.js"><\/script>');
+            document.write('<script type="text/javascript" src="./js/cdv/TwitterPlugin-Android.js"><\/script>');
+        } else { 
+            document.write('<script charset="utf-8" src="./js/cdv/cordova-2.5.0-iOS.js"><\/script>');
+            document.write('<script type="text/javascript" src="./js/cdv/TwitterPlugin-iOS.js"><\/script>');
+        }
+        </script>
+        <script type="text/javascript" charset="utf-8" src="./js/cdv/PushNotification.js"></script>
+        <script type="text/javascript" charset="utf-8" src="./js/facebook/facebook-js-sdk.js"></script>
+        <script type="text/javascript" charset="utf-8" src="./js/cdv/cdv-plugin-fb-connect.js"></script>
+        <script type="text/javascript" charset="utf-8" src="./js/jquery/jquery-2.0.3.min.js"></script>
+        <script type="text/javascript" charset="utf-8" src="./js/jquery/jquery.timeago.js"></script>
+        <script type="text/javascript" charset="utf-8" src="./js/jquery/jquery.knob.js"></script>
+        <script type="text/javascript" charset="utf-8" src="./js/af/jq.appframework.js"></script>
+        <script type="text/javascript" charset="utf-8" src="./js/af/ui/appframework.ui.js"></script>
+        <script type="text/javascript" charset="utf-8" src="./js/af/ui/transitions/all.js"></script>
+        <script type="text/javascript" charset="utf-8" src="./js/af/plugins/af.css3animate.js"></script>
+        <script type="text/javascript" charset="utf-8" src="./js/af/plugins/af.scroller.js"></script>
+        <script type="text/javascript" charset="utf-8" src="./js/af/plugins/af.touchEvents.js"></script>
+        <script type="text/javascript" charset="utf-8" src="./js/af/plugins/af.touchLayer.js"></script>
+        <script type="text/javascript" charset="utf-8" src="./js/af/plugins/af.popup.js"></script>
+        <script type="text/javascript" charset="utf-8" src="./js/qualia/qualia.js"></script>
+        <script type="text/javascript" charset="utf-8" src="./js/index.js"></script>
+    </head>
+    <body>
+        <div id="afui">
+            <div id="header">
+            </div>
+            <header id="blank"></header>
+            <div id="content">
+                <div id="main" class="panel" selected="true"></div>
+                <div id="login" class="panel" title="Login" data-header="blank" style="overflow:hidden; height:100%;">
+                    <form id="login-form" onsubmit="app.login(login_email); return false;">
+                        <img src="img/qualia-logo.png" />
+                        <a class="button centre facebook" onclick="app.loginWithFacebook()"><span>Login with Facebook</span></a>
+                        <div class="hr"><span>OR</span></div>
+                        <input id="login_email" type="email" placeholder="Enter your email address here" />
+                        <input class="button centre" type="submit" value="Login with Email" />
+                        <a class="button centre" onclick="window.open('http://qualia.org.uk/privacy','_blank','location=yes')"><span>Privacy &amp; Terms</span></a>
+                    </form>
+                </div>
+                <div id="schedule" class="panel" title="Schedule" data-load="initialiseEvents">
+                    <form id="search" onsubmit="$('#search input').blur(); return false;" onclick="app.focusSearch()"><input type="text" placeholder="Enter title, quickcode, location etc" onblur="app.searchEvents();" /><a class="close" onclick="app.cancelSearch()"></a><input type="submit" /></form>
+                    <a id="schedule-find" class="tab active" onclick="app.displayEvents()">Find Events</a><a id="schedule-me" class="tab" onclick="app.displaySchedule()">My Schedule</a>
+                    <div id="schedule-day">
+                        <a class="left" onclick="app.displayEvents(this)"></a>
+                        <span></span>
+                        <a class="right" onclick="app.displayEvents(this)"></a>
+                    </div>
+                    <ul id="schedule-list"></ul>
+                </div>
+                <div id="pre-feedback" class="panel" title="Leave Feedback" data-load="initialisePreFeedback">
+                    <form id="pre-feedback-form" onsubmit="return false;">
+                    <div class="padding">
+                        <span class="content-title">Pre-Event Feedback</span>
+                        <p>Rate your interest in this event.</p>
+                    </div>
+                    <hr />
+                    <div class="padding">
+                        <span class="content-title">Q.1 How interested are you in this event?</span>
+                        <span class="range-label">Neutral</span>
+                        <div class="range-container"><input name="anticipation" type="range" min="1" max="7" value="4" data-content="4" /></div>
+                    </div>
+                    <hr />
+                    <div class="padding">
+                        <span class="content-title">Q.2 Comment</span>
+                        <input name="comment" type="text" placeholder="Write your feedback here" />
+                        <input type="submit" class="centre" value="Submit Feedback" onclick="app.submitPreFeedback()" />
+                    </div>
+                    </form>
+                </div>
+                <div id="post-feedback" class="panel" title="Leave Feedback" data-load="initialisePostFeedback">
+                    <div class="padding">
+                        <span class="content-title">Post-Event Feedback</span>
+                        <p>Rate the event.</p>
+                        <a class="button centre notattend" onclick="app.submitPostFeedback(true)"><span>Did not attend</span></a>
+                    </div>
+                    <hr />
+                    <form id="post-feedback-form" onsubmit="return false;">
+                        <div class="padding">
+                            <span class="content-title">Q.1 Met My Expectations</span>
+                            <span class="range-label">Neutral</span>
+                            <div class="range-container"><input name="expectations" type="range" min="1" max="7" value="4" data-content="4" /></div>
+                        </div>
+                        <hr />
+                        <div class="padding">
+                            <span class="content-title">Q.2 High Quality</span>
+                            <span class="range-label">Neutral</span>
+                            <div class="range-container"><input name="quality" type="range" min="1" max="7" value="4" data-content="4" /></div>
+                        </div>
+                        <hr />
+                        <div class="padding">
+                            <span class="content-title">Q.3 Enjoyable</span>
+                            <span class="range-label">Neutral</span>
+                            <div class="range-container"><input name="enjoyable" type="range" min="1" max="7" value="4" data-content="4" /></div>
+                        </div>
+                        <hr />  
+                        <div class="padding">
+                            <span class="content-title">Q.4 Satisfied Overall</span>
+                            <span class="range-label">Neutral</span>
+                            <div class="range-container"><input name="satisfaction" type="range" min="1" max="7" value="4" data-content="4" /></div>
+                        </div>
+                        <hr />                  
+                        <div class="padding">
+                            <span class="content-title">Q.5 Comment</span>
+                            <input name="comment" type="text" placeholder="Write your feedback here" />
+                            <input type="submit" class="centre" value="Submit Feedback" onclick="app.submitPostFeedback()" />
+                        </div>
+                    </form>
+                </div>
+                <div id="social" class="panel" title="Social" data-load="initialiseSocial">
+                    <div class="padding">
+                        <div class="post-box">
+                        <input id="social-post" type="text" placeholder="Write your message here" />
+                        <a class="button send" onclick="app.postSocial()"><span>Send</span></a>
+                        </div>
+                        <div class="onoffswitch facebook">
+                            <input type="checkbox" name="facebooktoggle" class="onoffswitch-checkbox" id="facebooktoggle" checked>
+                            <label class="onoffswitch-label" for="facebooktoggle">
+                                <div class="onoffswitch-inner"></div>
+                                <div class="onoffswitch-switch"></div>
+                            </label>
+                        </div>
+                        <div class="onoffswitch twitter">
+                            <input type="checkbox" name="twittertoggle" class="onoffswitch-checkbox" id="twittertoggle" checked>
+                            <label class="onoffswitch-label" for="twittertoggle">
+                                <div class="onoffswitch-inner"></div>
+                                <div class="onoffswitch-switch"></div>
+                            </label>
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                    <hr />
+                    <ul id="social-feed">
+                    </ul>
+                </div>
+                <div id="mood" class="panel" title="Mood" data-load="initialiseMood">
+                    <div class='padding'><p><span class="content-title">Q. How do you feel?</span>Move the dial to change what mood you are feeling right here right now.</p></div>
+                    <div class="knob-container"><span id="mood-title">Neutral</span><span id="mood-value">4</span><input type="text" class="dial" value="4" data-min="1" data-max="7" data-angleArc="270" data-angleOffset="225" data-lineCap="round" data-thickness="0.33" data-cursor="0.1" data-displayInput="false" data-fgColor="#FFFFFF" data-bgColor="#92278f" data-width="240" data-height="240" /></div>
+                </div>
+                <div id="hotspots" class="panel" title="Hotspots" style="overflow:hidden; height:100%;" data-load="initialiseHotspots">
+                    <!--<iframe id="hotspots-map" src="http://www.qualia.org.uk/mobile/app/map/" width="100%" height="100%" frameBorder="0"></iframe>-->
+                </div>
+                <div id="information" class="panel" title="About the App">
+                    <div class="help-box">
+                        <span>Help</span><a class="button help" href="#help"></a>
+                    </div>
+                    <hr />
+                    <div class="padding">
+                        <img class="full" src="img/qualia-logo.png" />
+                        <span class="content-title">What is Qualia?</span>
+                        <p>The Qualia App is part of a ground-breaking digital research and development project, which aims to revolutionize the way audience experiences at arts and culture events are evaluated. The Qualia project will help us develop a greater understanding of the less tangible impacts of public engagement with arts and culture.<br /><br /></p>
+                        <p>The project aims to create a transferable evaluation tool enabling arts and culture organisations to develop cultural events and activities based on robust, real-time knowledge about audience responses, thereby enhancing the sector’s economic, cultural and social impact.</p>
+                        <a class="button centre" onclick="window.open('http://www.qualia.org.uk/','_blank','location=yes')"><span>View Website</span></a>
+                    </div>
+                    <hr />
+                    <div class="padding">
+                        <span class="content-title">Partners</span>
+                        <p>The Qualia App was produced through a partnership of Cheltenham Festivals, i-DAT at Plymouth University and evaluation and impact researchers from The University of Warwick.</p>
+                        <p>Supported by the Digital R&amp;D Fund for the Arts - Nesta, Arts &amp; Humanities Research Council and public funding by the National Lottery through Arts Council England.</p>
+                    </div>
+                    <ul>
+                        <li><table><tr><td class="left"><img src="img/cheltenham-logo.png" width="67" height="21" /></td><td><span class="content-title">Cheltenham Festivals</span><p>Cheltenham Festivals is a National Portfolio Organisation. Each year we create four nationally significant festivals Jazz, Science, Music &amp; Literature as well as delivering a year round education programme. Our mission is to open minds, transform the way people think, improve knowledge and stimulate creativity through Festivals with buzz, bite, energy.</p><a class="button" onclick="window.open('http://www.cheltenhamfestivals.com','_blank','location=yes')"><span>View Website</span></a></td></tr></table></li>
+                        <li><table><tr><td class="left"><img src="img/idat-logo.png" width="56" height="27" /></td><td><span class="content-title">i-DAT</span><p>i-DAT is a lab for creative research, experimentation and innovation across the fields of digital Art, Science and Technology, generating social, economic and cultural benefit. It is a National Portfolio Organisation located within Plymouth University.</p><a class="button" onclick="window.open('http://www.i-dat.org','_blank','location=yes')"><span>View Website</span></a></td></tr></table></li>
+                        <li><table><tr><td class="left"><img src="img/warwick-logo.png" width="58" height="17" /></td><td><span class="content-title">The University of Warwick</span><p>Dr Eric Jensen is the research lead for the Qualia project. He is a Fellow of the Higher Education Academy and Associate Professor in the Department of Sociology at the University of Warwick. Within the sociology department, key research priorities include: Culture, Media and Representation and Public Engagement.</p><a class="button" onclick="window.open('http://www2.warwick.ac.uk/fac/soc/sociology/staff/academicstaff/eric_jensen/','_blank','location=yes')"><span>View Website</span></a></td></tr></table></li>
+                        <li><table><tr><td class="left"><img src="img/intercity-logo.png" width="68" height="13" /></td><td><span class="content-title">Intercity</span><p>Founded by ex Creative Review magazine art director Nathan Gale, Intercity is a small UK-based graphic design studio with an international network of clients and collaborators from the worlds of art, design, photography, illustration, digital media and beyond.</p><a class="button" onclick="window.open('http://www.intercitystudio.com','_blank','location=yes')"><span>View Website</span></a></td></tr></table></li>
+                        <li><table><tr><td class="left"><img src="img/elixel-logo.png" width="67" height="22" /></td><td><span class="content-title">Elixel</span><p>Bringing pixels to life, Elixel is a UK-based digital creative agency which specializes in crafting all-in-one interactive experiences. We offer responsive websites, brand design and mobile app solutions.</p><a class="button" onclick="window.open('http://www.elixel.co.uk','_blank','location=yes')"><span>View Website</span></a></td></tr></table></li>
+                    </ul>
+                    <hr />
+                    <div class="padding">
+                        <img src="img/nesta-logo.svg" style="display:block; margin:0 auto;" />
+                        <a class="button centre" onclick="window.open('http://www.artsdigitalrnd.org.uk/','_blank','location=yes')"><span>View Website</span></a>
+                    </div>
+                </div>
+                <div id="dashboard" class="panel" title="Dashboard" data-load="initialiseDashboard">
+                    <div class="help-box">
+                        <span>Help</span><a class="button help" href="#help"></a>
+                    </div>
+                    <hr />
+                    <div class="columns">
+                        <div class="half-column">
+                            <div class="knob-container"><input type="text" class="dial" value="75" data-readOnly=true data-min=0 data-max="100" data-lineCap="round" data-thickness="0.4" data-displayInput="false" data-fgColor="#00aeef" data-bgColor="#FFF" data-width="85" data-height="85" data-angleOffset="1" /></div>
+                        </div><div class="half-column">
+                            <span id="completed" class="content-title">0% Completed</span>
+                            <a class="button" href="#profile"><span>Edit Profile</span></a>
+                        </div>
+                    </div>
+                    <hr />
+                    <div id="visualisations"></div>
+                </div>
+                <div id="notifications" class="panel" title="Notifications" data-load="loadNotifications">
+                    <ul id="notifications-list"></ul>
+                </div>
+                <div id="help" class="panel" title="Help Information">
+                    <div class="padding">
+                        <span class="content-title">Help Information</span>
+                        <p>Welcome to the Qualia App! Help us build a better audience experience. Access up to date information on events and the mood of the festival, build your personal schedule and tell us how you feel.</p>
+                    </div>
+                    <hr />
+                    <ul>
+                        <li><table><tr><td class='left'><div class='menu'></div></td><td><span class='content-title'>Menu</span><p>Press and hold to get the pop up menu, or press the menu icon at the top left of the screen.</p></td></tr></table></li>
+                        <li><table><tr><td class='left'><div class='notification'></div></td><td><span class='content-title'>Notifications</span><p>Keep up to date with your notifications.</p></td></tr></table></li>
+                        <li><table><tr><td class='left'><div class='schedule'></div></td><td><span class='content-title'>Schedule</span><p>Up to date event information, build your personal schedule and leave feedback.</p></td></tr></table></li>
+                        <li><table><tr><td class='left'><div class='dashboard'></div></td><td><span class='content-title'>Dashboard</span><p>Update your profile and see real-time feedback about the mood of the festival.</p></td></tr></table></li>
+                        <li><table><tr><td class='left'><div class='mood'></div></td><td><span class='content-title'>Mood</span><p>Tell us how you are feeling right here, right now.</p></td></tr></table></li>
+                        <li><table><tr><td class='left'><div class='information'></div></td><td><span class='content-title'>About the App</span><p>Find out more about the Qualia project.</p></td></tr></table></li>
+                        <li><table><tr><td class='left'><div class='social'></div></td><td><span class='content-title'>Social</span><p>Use hashtagged (#) tweets to keep up to date with your social media feeds.</p></td></tr></table></li>
+                        <li><table><tr><td class='left'><div class='hotspots'></div></td><td><span class='content-title'>Hotspots</span><p>A real-time map of festival activity.</p></td></tr></table></li>
+                    </ul>
+                </div>
+                <div id="profile" class="panel" title="Edit Profile" data-load="initialiseProfile" data-unload="unloadProfile">
+                    <div class="padding">
+                        <a class="skip button centre" style="display:none" onclick="app.navigateTo('dashboard','fade')"><span>Skip</span></a>
+                        <span class="content-title">My Profile</span>
+                        <p>Please fill in the form below.</p>
+                        <form id="profile-form" onsubmit="return false;">
+                            <input name="first_name" type="text" placeholder="First Name" />
+                            <input name="middle_name" type="text" placeholder="Middle Name" />
+                            <input name="last_name" type="text" placeholder="Last Name" />
+                            <select name="is_member">
+                                <option value="" disabled selected>Are you a member?</option>
+                                <option value="true">I am a member</option>
+                                <option value="false">I am not a member</option>
+                            </select>
+                            <select name="gender">
+                                <option value="" disabled selected>Please choose your gender</option>
+                                <option value="M">Male</option>
+                                <option value="F">Female</option>
+                                <option value="U">Undeclared Gender</option>
+                            </select>
+                            <input name="email" name="email" type="email" placeholder="Email" />
+                            <input name="hometown" type="text" placeholder="Hometown" />
+                            <select name="age_range">
+                                <option value="" disabled selected>Please choose your age range</option>
+                                <option value="A">13-17</option>
+                                <option value="B">18-20</option>
+                                <option value="C">21+</option>
+                            </select>
+                            <select name="attended_similar">
+                                <option value="" disabled selected>Have you attended similar?</option>
+                                <option value="Y">I have attended similar</option>
+                                <option value="N">I have not attended similar</option>
+                                <option value="U">I am unsure whether I have attended similar</option>
+                            </select>
+                            <!--<input name="birthday" type="date" placeholder="Birthday" />-->
+                            <select name="ethnicity">
+                                <option value="" disabled selected>Please choose your ethnicity</option>
+                                <option value="Mixed Race">Mixed Race</option>
+                                <option value="Arctic">Arctic (Siberian, Eskimo)</option>
+                                <option value="Caucasian European">Caucasian (European)</option>
+                                <option value="Caucasian Indian">Caucasian (Indian)</option>
+                                <option value="Caucasian Middle East">Caucasian (Middle East)</option>
+                                <option value="Caucasian North African-Other">Caucasian (North African, Other)</option>
+                                <option value="Indigenous Australian">Indigenous Australian</option>
+                                <option value="Native American">Native American</option>
+                                <option value="North East Asian">North East Asian (Mongol, Tibetan, Korean Japanese, etc)</option>
+                                <option value="Pacific">Pacific (Polynesian, Micronesian, etc)</option>
+                                <option value="South East Asian">South East Asian (Chinese, Thai, Malay, Filipino, etc)</option>
+                                <option value="West African-Bushmen-Ethiopian">West African, Bushmen, Ethiopian</option>
+                                <option value="Other">Other Race</option>
+                            </select>
+                            <select name="income">
+                                <option value="" disabled selected>Please choose your income</option>
+                                <option value="A">0-10k</option>
+                                <option value="B">11-20k</option>
+                                <option value="C">21-30k</option>
+                                <option value="D">31-40k</option>
+                                <option value="E">41-50k</option>
+                                <option value="F">50k+</option>
+                            </select>
+                            <input name="num_children" type="text" onfocus="this.type='number';" onblur="this.type='text';" pattern="[0-9]*" placeholder="How many children do you have?" min="0" />
+                            <select name="religion">
+                                <option value="" disabled selected>Please choose your religion</option>
+                                <option value="African Traditional & Diasporic">African Traditional &amp; Diasporic</option>
+                                <option value="Agnostic">Agnostic</option>
+                                <option value="Atheist">Atheist</option>
+                                <option value="Buddhism">Buddhism</option>
+                                <option value="Chinese traditional religion">Chinese traditional religion</option>
+                                <option value="Christianity">Christianity</option>
+                                <option value="Hinduism">Hinduism</option>
+                                <option value="Islam">Islam</option>
+                                <option value="Judaism">Judaism</option>
+                                <option value="Sikhism">Sikhism</option>
+                                <option value="Other">Other</option>
+                                <option value="Nonreligious">Nonreligious</option>
+                            </select>
+                            <input class="centre" type="submit" value="Edit Profile" onclick="app.editProfile()" />
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="menu">
+            <a class="hold">Hold</a>
+            <div>
+                <span></span>
+                <a class="radial schedule" href="#schedule" title="Schedule"></a>
+                <a class="radial social" href="#social" title="Social"></a>
+                <a class="radial mood" href="#mood" title="Mood"></a>
+                <a class="radial information" href="#information" title="About the App"></a>
+                <a class="radial hotspots" href="#hotspots" title="Hotspots"></a>
+                <a class="radial dashboard" href="#dashboard" title="Dashboard"></a>
+            </div>
+        </div>
+    </body>
+    <script type="text/javascript">
+        app.initialise();
+    </script>
+</html>
