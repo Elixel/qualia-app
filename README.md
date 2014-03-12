@@ -3,7 +3,7 @@ Qualia PhoneGap for iOS & Android
 This is the template for Qualia PhoneGap Apps which works for Android & iOS devices. 
 
 - Supports Android 4.0+
-- Supports iPhone iOS 6+
+- Supports iPhone iOS 7+
 
 PhoneGap
 ==========
