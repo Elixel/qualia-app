@@ -223,9 +223,24 @@
 
     webViewBounds.size.height -= FOOTER_HEIGHT;
 
-    self.webView = [[UIWebView alloc] initWithFrame:webViewBounds];
+    // CHANGE
+    NSArray *vComp = [[UIDevice currentDevice].systemVersion componentsSeparatedByString:@"."];
+    
+    if ([[vComp objectAtIndex:0] intValue] >= 7) { // iOS 7 or above
+        
+        CGRect newWebViewBounds = CGRectMake( 0, 20, webViewBounds.size.width, webViewBounds.size.height-20 );
+        self.webView = [[UIWebView alloc] initWithFrame:newWebViewBounds];
+        
+    }else{
+        self.webView = [[UIWebView alloc] initWithFrame:webViewBounds];
+    }
+    
+    // CHANGE
+    
+    //self.webView = [[UIWebView alloc] initWithFrame:webViewBounds];
     self.webView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
 
+        
     [self.view addSubview:self.webView];
     [self.view sendSubviewToBack:self.webView];
 

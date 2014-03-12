@@ -21,6 +21,7 @@
 -->
 <widget>
     <preference name="KeyboardDisplayRequiresUserAction" value="true" />
+    <preference name="KeyBoardShrinksView" value="false" />
     <preference name="SuppressesIncrementalRendering" value="false" />
     <preference name="UIWebViewBounce" value="false" />
     <preference name="TopActivityIndicator" value="gray" />
@@ -33,7 +34,6 @@
     <preference name="MediaPlaybackRequiresUserAction" value="false" />
     <preference name="AllowInlineMediaPlayback" value="false" />
     <preference name="BackupWebStorage" value="cloud" />
-
     <content src="index.html" />
 
     <plugins>

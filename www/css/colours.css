@@ -1,0 +1,144 @@
+html,body {   
+    /*background:#0e0d0e !important;*/
+}
+
+/* Base text colour */
+#afui {
+    color:#aba3ab; 
+    /*background:#0e0d0e;*/
+}
+
+/* Panel background colour */
+#afui .panel {
+    background-color:#0e0d0e; 
+}
+
+/* Form elements */
+
+#afui input[type="text"], #afui input[type="email"], #afui input[type="number"], #afui input[type="date"], #afui select {
+    background:transparent;
+    border-bottom:1px solid #837e81;
+    border-top:1px solid #837e81;
+    color:#f7eef3;    
+}
+
+#afui input[type="text"]:disabled, #afui input[type="email"]:disabled, #afui input[type="date"]:disabled, #afui input[type="number"]:disabled, select:disabled {
+    color:#524e52 !important;
+    border-top:1px solid #524e52;
+    border-bottom:1px solid #524e52;
+}
+
+#afui input::-webkit-input-placeholder, #afui select::-webkit-input-placeholder {
+    color:#524e52;
+}
+
+#profile select {
+    color:#524e52;
+}
+
+#profile select.notdisabled {
+    color:#f7eef3;   
+}
+
+/* Range slider */
+#afui .range-container:after {
+    color:#CCCCCC;
+}
+
+.noUi-background {
+	background: #92278F;
+}
+
+.noUi-handle {
+	background: #FFF;
+}
+
+#afui .range-label {
+    color:#f7eef3;
+}
+
+#afui .range-label:before, #afui .range-label:after {
+    color:#CCCCCC;
+}
+
+/* Buttons */
+
+.button {
+    border:1px solid #d1d5d5 !important;
+    background:none !important;
+    color:#f7eef3 !important;
+}
+
+.button:active, input[type="submit"]:active {
+    background:#ed1d24 !important;
+    border:2px solid #ed1d24 !important;
+}
+
+/* Submit Button */
+#afui input[type="submit"] {
+    background:none;
+    color:#f7eef3;
+    border:1px solid #d1d5d5;    
+}
+
+#afui input[type="submit"]:disabled, #afui input[type="submit"]:active:disabled, .button.disabled {
+    border:1px solid #524e52 !important;
+    color:#524e52 !important;
+    background:transparent !important;
+}
+
+/* Body styles */
+
+.content-title {
+    color:#f7eef3;    
+}
+
+.small-text {
+       
+}
+
+/* Horizontal rule */
+
+hr {
+    border-top:1px solid #837e81;
+}
+
+hr.disabled {
+    border-top:1px solid #524e52;  
+}
+
+div.hr span:before, div.hr span:after {
+    border-top:1px solid #837e81;
+}
+
+div.hr.disabled span:before, div.hr.disabled span:after {
+    border-top:1px solid #524e52;
+}
+
+/* Header */
+
+body.ios7 #afui > #menu, body.ios7 #afui > #menu_right {
+    border-top:20px solid #FFF;
+}
+
+#afui .af-badge {
+    color:#FFF;
+    background-color:#0e0d0e;    
+}
+
+/* Menu */
+
+#afui > #menu.tabletMenu {
+    background:#20201f; 
+}
+
+#afui > #menu_right.tabletMenu {
+    background:#20201f; 
+}
+
+/* Overlay */
+#afui_mask.ui-loader {
+    background-color:rgba(255,255,255,1);
+    color:#000;
+}
+

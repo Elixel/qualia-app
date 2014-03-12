@@ -690,6 +690,7 @@
 				ARCHS = armv7;
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -705,7 +706,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "Qualia/Qualia-Info.plist";
 				INSTALL_OWNER = "$(USER)";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
@@ -724,7 +725,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = Qualia;
-				PROVISIONING_PROFILE = "4E40AF52-EE30-46A1-BB3B-BDD7DD7F4B09";
+				PROVISIONING_PROFILE = "E0C2A6E5-0E95-4A17-8D79-90F9587DE769";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "armv7 arm64";
 			};
@@ -737,6 +738,7 @@
 				ARCHS = armv7;
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -751,7 +753,7 @@
 				INFOPLIST_FILE = "Qualia/Qualia-Info.plist";
 				INSTALL_OWNER = "$(USER)";
 				"INSTALL_OWNER[sdk=*]" = "$(USER)";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
@@ -770,7 +772,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = Qualia;
-				PROVISIONING_PROFILE = "4E40AF52-EE30-46A1-BB3B-BDD7DD7F4B09";
+				PROVISIONING_PROFILE = "E0C2A6E5-0E95-4A17-8D79-90F9587DE769";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "armv7 arm64";
 			};
@@ -797,7 +799,7 @@
 					"\"$(OBJROOT)/UninstalledProducts/include\"",
 					"\"$(BUILT_PRODUCTS_DIR)\"",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
 					CoreFoundation,
@@ -839,7 +841,7 @@
 					"\"$(OBJROOT)/UninstalledProducts/include\"",
 					"\"$(BUILT_PRODUCTS_DIR)\"",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
 					CoreFoundation,

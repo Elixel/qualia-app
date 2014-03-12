@@ -5,18 +5,20 @@
         <meta http-equiv="Content-type" content="text/html; charset=utf-8">
         <meta name="format-detection" content="telephone=no" />
         
-        <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no"/>
+        <meta name="viewport" content="height=device-height,initial-scale=1, maximum-scale=1, user-scalable=no"/>
         
         <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
         <link rel="stylesheet" type="text/css" href="css/af.ui.base.css"  />
         <link rel="stylesheet" type="text/css" href="css/index.css"  />
+        <link rel="stylesheet" type="text/css" href="css/colours.css"  />
         <link rel="stylesheet" type="text/css" href="css/cache.css"  />
+        <link rel="stylesheet" type="text/css" href="js/leaflet/leaflet.css"  />
         
         <script type="text/javascript">
         if (navigator.userAgent.toLowerCase().match(/android/)) { 
             document.write('<script charset="utf-8" src="./js/cdv/cordova-2.5.0-Android.js"><\/script>');
             document.write('<script type="text/javascript" src="./js/cdv/TwitterPlugin-Android.js"><\/script>');
-        } else { 
+        } else {
             document.write('<script charset="utf-8" src="./js/cdv/cordova-2.5.0-iOS.js"><\/script>');
             document.write('<script type="text/javascript" src="./js/cdv/TwitterPlugin-iOS.js"><\/script>');
         }
@@ -27,6 +29,8 @@
         <script type="text/javascript" charset="utf-8" src="./js/jquery/jquery-2.0.3.min.js"></script>
         <script type="text/javascript" charset="utf-8" src="./js/jquery/jquery.timeago.js"></script>
         <script type="text/javascript" charset="utf-8" src="./js/jquery/jquery.knob.js"></script>
+        <script type="text/javascript" charset="utf-8" src="./js/jquery/jquery.nouislider.min.js"></script>
+        <script type="text/javascript" charset="utf-8" src="./js/jquery/jquery.easing.1.3.js"></script>
         <script type="text/javascript" charset="utf-8" src="./js/af/jq.appframework.js"></script>
         <script type="text/javascript" charset="utf-8" src="./js/af/ui/appframework.ui.js"></script>
         <script type="text/javascript" charset="utf-8" src="./js/af/ui/transitions/all.js"></script>
@@ -37,6 +41,7 @@
         <script type="text/javascript" charset="utf-8" src="./js/af/plugins/af.popup.js"></script>
         <script type="text/javascript" charset="utf-8" src="./js/qualia/qualia.js"></script>
         <script type="text/javascript" charset="utf-8" src="./js/index.js"></script>
+        <script type="text/javascript" charset="utf-8" src="./js/leaflet/leaflet.js"></script>
     </head>
     <body>
         <div id="afui">
@@ -55,15 +60,15 @@
                         <a class="button centre" onclick="window.open('http://qualia.org.uk/privacy','_blank','location=yes')"><span>Privacy &amp; Terms</span></a>
                     </form>
                 </div>
-                <div id="schedule" class="panel" title="Schedule" data-load="initialiseEvents">
+                <div id="schedule" class="panel" title="Schedule" data-load="initialiseEvents" data-mode="events">
                     <form id="search" onsubmit="$('#search input').blur(); return false;" onclick="app.focusSearch()"><input type="text" placeholder="Enter title, quickcode, location etc" onblur="app.searchEvents();" /><a class="close" onclick="app.cancelSearch()"></a><input type="submit" /></form>
                     <a id="schedule-find" class="tab active" onclick="app.displayEvents()">Find Events</a><a id="schedule-me" class="tab" onclick="app.displaySchedule()">My Schedule</a>
                     <div id="schedule-day">
-                        <a class="left" onclick="app.displayEvents(this)"></a>
+                        <a class="left" onclick="app.updateDatePicker(this)"></a>
                         <span></span>
-                        <a class="right" onclick="app.displayEvents(this)"></a>
+                        <a class="right" onclick="app.updateDatePicker(this)"></a>
                     </div>
-                    <ul id="schedule-list"></ul>
+                    <div id="schedule-list"></div>
                 </div>
                 <div id="pre-feedback" class="panel" title="Leave Feedback" data-load="initialisePreFeedback">
                     <form id="pre-feedback-form" onsubmit="return false;">
@@ -75,7 +80,7 @@
                     <div class="padding">
                         <span class="content-title">Q.1 How interested are you in this event?</span>
                         <span class="range-label">Neutral</span>
-                        <div class="range-container"><input name="anticipation" type="range" min="1" max="7" value="4" data-content="4" /></div>
+                        <div class="range-container" data-content="4" id="pre-interest"></div>
                     </div>
                     <hr />
                     <div class="padding">
@@ -96,31 +101,69 @@
                         <div class="padding">
                             <span class="content-title">Q.1 Met My Expectations</span>
                             <span class="range-label">Neutral</span>
-                            <div class="range-container"><input name="expectations" type="range" min="1" max="7" value="4" data-content="4" /></div>
+                            <div class="range-container" data-content="4" id="post-expectations"></div>
                         </div>
                         <hr />
                         <div class="padding">
                             <span class="content-title">Q.2 High Quality</span>
                             <span class="range-label">Neutral</span>
-                            <div class="range-container"><input name="quality" type="range" min="1" max="7" value="4" data-content="4" /></div>
+                            <div class="range-container" data-content="4" id="post-quality"></div>
                         </div>
                         <hr />
                         <div class="padding">
                             <span class="content-title">Q.3 Enjoyable</span>
                             <span class="range-label">Neutral</span>
-                            <div class="range-container"><input name="enjoyable" type="range" min="1" max="7" value="4" data-content="4" /></div>
+                            <div class="range-container" data-content="4" id="post-enjoyable"></div>
                         </div>
                         <hr />  
                         <div class="padding">
                             <span class="content-title">Q.4 Satisfied Overall</span>
                             <span class="range-label">Neutral</span>
-                            <div class="range-container"><input name="satisfaction" type="range" min="1" max="7" value="4" data-content="4" /></div>
+                            <div class="range-container" data-content="4" id="post-satisfied"></div>
                         </div>
                         <hr />                  
                         <div class="padding">
                             <span class="content-title">Q.5 Comment</span>
                             <input name="comment" type="text" placeholder="Write your feedback here" />
                             <input type="submit" class="centre" value="Submit Feedback" onclick="app.submitPostFeedback()" />
+                        </div>
+                    </form>
+                </div>
+                <div id="generic-feedback" class="panel" title="Leave Feedback" data-load="initialiseGenericFeedback">
+                    <div class="padding">
+                        <span class="content-title">Event Feedback</span>
+                        <p>Rate the event.</p>
+                    </div>
+                    <hr />
+                    <form id="generic-feedback-form" onsubmit="return false;">
+                        <div class="padding">
+                            <span class="content-title">Q.1 Met My Expectations</span>
+                            <span class="range-label">Neutral</span>
+                            <div class="range-container" data-content="4" id="generic-expectations"></div>
+                        </div>
+                        <hr />
+                        <div class="padding">
+                            <span class="content-title">Q.2 High Quality</span>
+                            <span class="range-label">Neutral</span>
+                            <div class="range-container" data-content="4" id="generic-quality"></div>
+                        </div>
+                        <hr />
+                        <div class="padding">
+                            <span class="content-title">Q.3 Enjoyable</span>
+                            <span class="range-label">Neutral</span>
+                            <div class="range-container" data-content="4" id="generic-enjoyable"></div>
+                        </div>
+                        <hr />  
+                        <div class="padding">
+                            <span class="content-title">Q.4 Satisfied Overall</span>
+                            <span class="range-label">Neutral</span>
+                            <div class="range-container" data-content="4" id="generic-satisfied"></div>
+                        </div>
+                        <hr />                  
+                        <div class="padding">
+                            <span class="content-title">Q.5 Comment</span>
+                            <input name="comment" type="text" placeholder="Write your feedback here" />
+                            <input type="submit" class="centre" value="Submit Feedback" onclick="app.submitGenericFeedback()" />
                         </div>
                     </form>
                 </div>
@@ -147,21 +190,18 @@
                         <div style="clear:both;"></div>
                     </div>
                     <hr />
-                    <ul id="social-feed">
-                    </ul>
+                    <div id="social-feed">
+                    </div>
                 </div>
                 <div id="mood" class="panel" title="Mood" data-load="initialiseMood">
-                    <div class='padding'><p><span class="content-title">Q. How do you feel?</span>Move the dial to change what mood you are feeling right here right now.</p></div>
-                    <div class="knob-container"><span id="mood-title">Neutral</span><span id="mood-value">4</span><input type="text" class="dial" value="4" data-min="1" data-max="7" data-angleArc="270" data-angleOffset="225" data-lineCap="round" data-thickness="0.33" data-cursor="0.1" data-displayInput="false" data-fgColor="#FFFFFF" data-bgColor="#92278f" data-width="240" data-height="240" /></div>
+                    <div class='padding'><p><span class="content-title">Q. How do you feel?</span>You are feeling <span class="current-mood" style="color:#92278f">Neutral</span></p></div>
+                    <div class="knob-container"><span id="mood-title">Neutral</span><span id="mood-value">4</span><input type="text" class="dial" value="4" data-min="1" data-max="7" data-angleArc="270" data-angleOffset="225" data-lineCap="round" data-thickness="0.33" data-cursor="0.1" data-displayInput="false" data-fgColor="#FFFFFF" data-bgColor="#92278f" data-width="200" data-height="200" /></div>
+                    <a id="mood-submit" class="button centre" onclick="app.submitMoodButtonPressed()"><span>Submit Mood</span></a>
                 </div>
                 <div id="hotspots" class="panel" title="Hotspots" style="overflow:hidden; height:100%;" data-load="initialiseHotspots">
                     <!--<iframe id="hotspots-map" src="http://www.qualia.org.uk/mobile/app/map/" width="100%" height="100%" frameBorder="0"></iframe>-->
                 </div>
                 <div id="information" class="panel" title="About the App">
-                    <div class="help-box">
-                        <span>Help</span><a class="button help" href="#help"></a>
-                    </div>
-                    <hr />
                     <div class="padding">
                         <img class="full" src="img/qualia-logo.png" />
                         <span class="content-title">What is Qualia?</span>
@@ -176,11 +216,11 @@
                         <p>Supported by the Digital R&amp;D Fund for the Arts - Nesta, Arts &amp; Humanities Research Council and public funding by the National Lottery through Arts Council England.</p>
                     </div>
                     <ul>
-                        <li><table><tr><td class="left"><img src="img/cheltenham-logo.png" width="67" height="21" /></td><td><span class="content-title">Cheltenham Festivals</span><p>Cheltenham Festivals is a National Portfolio Organisation. Each year we create four nationally significant festivals Jazz, Science, Music &amp; Literature as well as delivering a year round education programme. Our mission is to open minds, transform the way people think, improve knowledge and stimulate creativity through Festivals with buzz, bite, energy.</p><a class="button" onclick="window.open('http://www.cheltenhamfestivals.com','_blank','location=yes')"><span>View Website</span></a></td></tr></table></li>
-                        <li><table><tr><td class="left"><img src="img/idat-logo.png" width="56" height="27" /></td><td><span class="content-title">i-DAT</span><p>i-DAT is a lab for creative research, experimentation and innovation across the fields of digital Art, Science and Technology, generating social, economic and cultural benefit. It is a National Portfolio Organisation located within Plymouth University.</p><a class="button" onclick="window.open('http://www.i-dat.org','_blank','location=yes')"><span>View Website</span></a></td></tr></table></li>
-                        <li><table><tr><td class="left"><img src="img/warwick-logo.png" width="58" height="17" /></td><td><span class="content-title">The University of Warwick</span><p>Dr Eric Jensen is the research lead for the Qualia project. He is a Fellow of the Higher Education Academy and Associate Professor in the Department of Sociology at the University of Warwick. Within the sociology department, key research priorities include: Culture, Media and Representation and Public Engagement.</p><a class="button" onclick="window.open('http://www2.warwick.ac.uk/fac/soc/sociology/staff/academicstaff/eric_jensen/','_blank','location=yes')"><span>View Website</span></a></td></tr></table></li>
-                        <li><table><tr><td class="left"><img src="img/intercity-logo.png" width="68" height="13" /></td><td><span class="content-title">Intercity</span><p>Founded by ex Creative Review magazine art director Nathan Gale, Intercity is a small UK-based graphic design studio with an international network of clients and collaborators from the worlds of art, design, photography, illustration, digital media and beyond.</p><a class="button" onclick="window.open('http://www.intercitystudio.com','_blank','location=yes')"><span>View Website</span></a></td></tr></table></li>
-                        <li><table><tr><td class="left"><img src="img/elixel-logo.png" width="67" height="22" /></td><td><span class="content-title">Elixel</span><p>Bringing pixels to life, Elixel is a UK-based digital creative agency which specializes in crafting all-in-one interactive experiences. We offer responsive websites, brand design and mobile app solutions.</p><a class="button" onclick="window.open('http://www.elixel.co.uk','_blank','location=yes')"><span>View Website</span></a></td></tr></table></li>
+                        <li><table><tr><td class="left"><img src="img/cheltenham-logo.png" width="67" height="21" /></td><td><span class="content-title">Cheltenham Festivals</span><p>Cheltenham Festivals is a National Portfolio Organisation. Each year we create four nationally significant festivals Jazz, Science, Music &amp; Literature as well as delivering a year round education programme. Our mission is to open minds, transform the way people think, improve knowledge and stimulate creativity through Festivals with buzz, bite, energy.</p><a class="button" onclick="window.open('http://www.cheltenhamfestivals.com','_blank','location=yes')"><span>View Website</span></a></td></tr></table></li></ul><hr />
+                        <ul><li><table><tr><td class="left"><img src="img/idat-logo.png" width="56" height="27" /></td><td><span class="content-title">i-DAT</span><p>i-DAT is a lab for creative research, experimentation and innovation across the fields of digital Art, Science and Technology, generating social, economic and cultural benefit. It is a National Portfolio Organisation located within Plymouth University.</p><a class="button" onclick="window.open('http://www.i-dat.org','_blank','location=yes')"><span>View Website</span></a></td></tr></table></li></ul><hr />
+                        <ul><li><table><tr><td class="left"><img src="img/warwick-logo.png" width="58" height="17" /></td><td><span class="content-title">The University of Warwick</span><p>Dr Eric Jensen is the research lead for the Qualia project. He is a Fellow of the Higher Education Academy and Associate Professor in the Department of Sociology at the University of Warwick. Within the sociology department, key research priorities include: Culture, Media and Representation and Public Engagement.</p><a class="button" onclick="window.open('http://www2.warwick.ac.uk/fac/soc/sociology/staff/academicstaff/eric_jensen/','_blank','location=yes')"><span>View Website</span></a></td></tr></table></li></ul><hr />
+                        <ul><li><table><tr><td class="left"><img src="img/intercity-logo.png" width="68" height="13" /></td><td><span class="content-title">Intercity</span><p>Founded by ex Creative Review magazine art director Nathan Gale, Intercity is a small UK-based graphic design studio with an international network of clients and collaborators from the worlds of art, design, photography, illustration, digital media and beyond.</p><a class="button" onclick="window.open('http://www.intercitystudio.com','_blank','location=yes')"><span>View Website</span></a></td></tr></table></li></ul><hr />
+                        <ul><li><table><tr><td class="left"><img src="img/elixel-logo.png" width="67" height="22" /></td><td><span class="content-title">Elixel</span><p>Bringing pixels to life, Elixel is a UK-based digital creative agency which specializes in crafting all-in-one interactive experiences. We offer responsive websites, brand design and mobile app solutions.</p><a class="button" onclick="window.open('http://www.elixel.co.uk','_blank','location=yes')"><span>View Website</span></a></td></tr></table></li>
                     </ul>
                     <hr />
                     <div class="padding">
@@ -189,6 +229,16 @@
                     </div>
                 </div>
                 <div id="dashboard" class="panel" title="Dashboard" data-load="initialiseDashboard">
+                    <ul id="user-profile"><li><table><tr><td class='left'><img class='circle' src='img/avatar.png' width='55' height='55' onerror='app.onImageError(this,\"img/avatar.png\")' /></td><td><span class='content-title'>Anonymous</span><span class='small-text'>You are feeling <span class="current-mood" style="color:#92278f">Neutral</span></span><a class="button centre" href="#mood"><span>Update Mood</span></a></td></tr></table></li></ul>
+                    <hr />
+                    <ul id="next-event"></ul>
+                    <div class="columns">
+                        <div class="third-column"><a id="profile-completion" href="#profile"><span>0%</span><input type="text" class="dial" value="75" data-readOnly=true data-min="0" data-max="100" data-lineCap="round" data-thickness="0.2" data-fgColor="#ffffff" data-bgColor="#5d585d" data-width="71" data-height="71" data-angleOffset="1" data-displayInput="false" /></a>Personal profile completion</div>
+                        <div class="third-column"><a id="subscribed-events" class="ring-counter" href="#schedule" onclick="jQuery('#schedule').data('mode','schedule')"><span>0</span></a>Events you're subscribed to</div>
+                        <div class="third-column"><a id="feedback-left" href="#schedule" onclick="jQuery('#schedule').data('mode','schedule')"><span>0%</span><input type="text" class="dial" value="75" data-readOnly=true data-min="0" data-max="100" data-lineCap="round" data-thickness="0.2" data-fgColor="#ffffff" data-bgColor="#5d585d" data-width="71" data-height="71" data-angleOffset="1" data-displayInput="false" /></a>Feedback left on your events</div>
+                    </div>
+                </div>
+                <div id="dashboard-2" class="panel" title="Dashboard" data-load="initialiseDashboard">
                     <div class="help-box">
                         <span>Help</span><a class="button help" href="#help"></a>
                     </div>
@@ -204,9 +254,9 @@
                     <hr />
                     <div id="visualisations"></div>
                 </div>
-                <div id="notifications" class="panel" title="Notifications" data-load="loadNotifications">
+                <!--div id="notifications" class="panel" title="Notifications" data-load="loadNotifications">
                     <ul id="notifications-list"></ul>
-                </div>
+                </div-->
                 <div id="help" class="panel" title="Help Information">
                     <div class="padding">
                         <span class="content-title">Help Information</span>
@@ -300,13 +350,33 @@
                                 <option value="Other">Other</option>
                                 <option value="Nonreligious">Nonreligious</option>
                             </select>
-                            <input class="centre" type="submit" value="Edit Profile" onclick="app.editProfile()" />
+                            <input class="centre" type="submit" value="Update Profile" onclick="app.editProfile()" />
                         </form>
                     </div>
                 </div>
+                <nav>
+                    <a id="menu-profile" class="profile" href="#profile">
+                        <img src="img/avatar.png" width="70" height="70" />
+                        <span class="username">Anonymous</span>
+                        <span class="action">Edit Profile</span>
+                    </a>
+                    <ul class="list">
+                        <li><a class="dashboard" href="#dashboard">Dashboard</a></li>
+                        <li><a class="schedule" href="#schedule">Schedule</a></li>
+                        <li><a class="mood" href="#mood">Mood</a></li>
+                        <li><a class="social" href="#social">Social</a></li>
+                        <li><a class="hotspots" href="#hotspots">Hotspots</a></li>
+                        <li><a class="information" href="#information">Information</a></li>
+                        <li><a class="logout" href="#login" onclick="app.logoutOfApp()">Logout</a></li>
+                    </ul>
+                </nav>
+                <nav>
+                    <ul id="notifications-list" class="list">
+                    </ul>
+                </nav>
             </div>
         </div>
-        <div id="menu">
+        <!--div id="menu">
             <a class="hold">Hold</a>
             <div>
                 <span></span>
@@ -317,7 +387,7 @@
                 <a class="radial hotspots" href="#hotspots" title="Hotspots"></a>
                 <a class="radial dashboard" href="#dashboard" title="Dashboard"></a>
             </div>
-        </div>
+        </div-->
     </body>
     <script type="text/javascript">
         app.initialise();

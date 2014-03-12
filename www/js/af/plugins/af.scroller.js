@@ -95,7 +95,7 @@
             refresh: false,
             refreshContent: "Pull to Refresh",
             refreshHangTimeout: 2000,
-            refreshHeight: 60,
+            refreshHeight: 90,
             refreshElement: null,
             refreshCancelCB: null,
             refreshRunning: false,
@@ -243,7 +243,7 @@
                     if (orginalEl !== null) {
                         afEl = af(orginalEl);
                     } else {
-                        afEl = af("<div id='" + this.container.id + "_pulldown' class='afscroll_refresh' style='border-radius:.6em;border: 1px solid #2A2A2A;background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0,#666666),color-stop(1,#222222));background:#222222;margin:0px;height:60px;position:relative;text-align:center;line-height:60px;color:white;width:100%;'>" + this.refreshContent + "</div>");
+                        afEl = af("<div id='" + this.container.id + "_pulldown' class='afscroll_refresh'>" + this.refreshContent + "</div>");
                     }
                 } else {
                     afEl = af(this.refreshElement);
@@ -251,7 +251,7 @@
                 var el = afEl.get(0);
 
                 this.refreshContainer = af("<div style=\"overflow:hidden;width:100%;height:0;margin:0;padding:0;padding-left:5px;padding-right:5px;display:none;\"></div>");
-                $(this.el).prepend(this.refreshContainer.append(el, 'top'));
+                $(this.el).prepend(this.refreshContainer.append(el, ''));
                 this.refreshContainer = this.refreshContainer[0];
             },
             fireRefreshRelease: function (triggered, allowHide) {
@@ -454,8 +454,8 @@
             if (this.refresh && this.refresh === true) {
                 this.coreAddPullToRefresh(el);
                 this.refreshContainer.style.position = "absolute";
-                this.refreshContainer.style.top = "-60px";
-                this.refreshContainer.style.height = "60px";
+                this.refreshContainer.style.top = "-90px";
+                this.refreshContainer.style.height = "90px";
                 this.refreshContainer.style.display = "block";
             }
         };
@@ -512,7 +512,8 @@
 
             //check for trigger
             if (this.refresh && (this.el.scrollTop) < 0) {
-                this.showRefresh();
+                if ((this.el.scrollTop <= -(this.refreshHeight))) this.showRefresh(); // COOKIE
+                //this.showRefresh();
                 //check for cancel
             } else if (this.refreshTriggered && this.refresh && (this.el.scrollTop > this.refreshHeight)) {
                 this.refreshTriggered = false;
@@ -585,7 +586,7 @@
                     that.el.scrollTop = 0;
                     that.logPos(that.el.scrollLeft, 0);
                 }
-                that.refreshContainer.style.top = "-60px";
+                that.refreshContainer.style.top = "-90px";
                 that.refreshContainer.style.position = "absolute";
                 that.dY = that.cY = 0;
                 $.trigger(that, "refresh-finish");

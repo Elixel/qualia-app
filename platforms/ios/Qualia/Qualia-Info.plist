@@ -46,7 +46,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1.2.4</string>
+	<string>1.2.5</string>
 	<key>FacebookAppID</key>
 	<string>510092625750443</string>
 	<key>LSRequiresIPhoneOS</key>
@@ -54,7 +54,7 @@
 	<key>NSMainNibFile~ipad</key>
 	<string></string>
 	<key>UIStatusBarHidden</key>
-	<true/>
+	<false/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

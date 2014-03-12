@@ -417,7 +417,7 @@
             refresh: false,
             refreshContent: "Pull to Refresh",
             refreshHangTimeout: 2000,
-            refreshHeight: 60,
+            refreshHeight: 90,
             refreshElement: null,
             refreshCancelCB: null,
             refreshRunning: false,
@@ -565,7 +565,7 @@
                     if (orginalEl !== null) {
                         afEl = af(orginalEl);
                     } else {
-                        afEl = af("<div id='" + this.container.id + "_pulldown' class='afscroll_refresh' style='border-radius:.6em;border: 1px solid #2A2A2A;background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0,#666666),color-stop(1,#222222));background:#222222;margin:0px;height:60px;position:relative;text-align:center;line-height:60px;color:white;width:100%;'>" + this.refreshContent + "</div>");
+                        afEl = af("<div id='" + this.container.id + "_pulldown' class='afscroll_refresh'>" + this.refreshContent + "</div>");
                     }
                 } else {
                     afEl = af(this.refreshElement);
@@ -573,7 +573,7 @@
                 var el = afEl.get(0);
 
                 this.refreshContainer = af("<div style=\"overflow:hidden;width:100%;height:0;margin:0;padding:0;padding-left:5px;padding-right:5px;display:none;\"></div>");
-                $(this.el).prepend(this.refreshContainer.append(el, 'top'));
+                //$(this.el).prepend(this.refreshContainer.append(el, 'top'));
                 this.refreshContainer = this.refreshContainer[0];
             },
             fireRefreshRelease: function (triggered, allowHide) {
@@ -853,7 +853,6 @@
             }
         };
         nativeScroller.prototype.onTouchEnd = function (e) {
-
             var triggered = this.el.scrollTop <= -(this.refreshHeight);
 
             this.fireRefreshRelease(triggered, true);
@@ -896,7 +895,6 @@
             }, 20);
         };
         nativeScroller.prototype.hideRefresh = function (animate) {
-
             if (this.preventHideRefresh) return;
 
             var that = this;
@@ -3335,8 +3333,16 @@
             width = width.replace("px", "") + "px";
             $("head").find("#styleWidth").remove();
             $("head").append("<style id='styleWidth'>#afui #menu {width:" + width + "  !important}</style>");
-        },
-
+            $("head").append("<style id='styleWidth'>#afui #menu_right {width:" + width + "  !important}</style>");
+        },/*
+        setRightSideMenuWidth: function(width) {
+            this.sideMenuWidth = width;
+            //override the css style
+            width = width + "";
+            width = width.replace("px", "") + "px";
+            $("head").find("#styleWidth").remove();
+            $("head").append("<style id='styleWidth'>#afui #menu_right {width:" + width + "  !important}</style>");
+        },*/
         /**
          * this will disable native scrolling on iOS
          *
@@ -3493,7 +3499,7 @@
            ```
          * @title $.ui.resetScrollers
          */
-        resetScrollers: true,
+        resetScrollers: false,
         /**
          * function to fire when afui is ready and completed launch
            ```
@@ -3746,6 +3752,43 @@
                 });
             }
         },
+        toggleRightMenu: function(force, callback, time) {
+            if (!this.isSideMenuEnabled() || this.togglingSideMenu) return;
+
+            var that = this;
+            var menu = $.query("#menu_right");
+            var els = $.query("#content,  #header, #navbar");
+            time = time || this.transitionTime;
+            var open = this.isRightMenuOn();
+            if (force === 2 || (!open && ((force !== undefined && force !== false) || force === undefined))) {
+                this.togglingSideMenu = true;
+                menu.show();
+                that.css3animate(els, {
+                    x: -that.sideMenuWidth,
+                    time: time,
+                    complete: function(canceled) {
+                        that.togglingSideMenu = false;
+                        els.vendorCss("Transition", "");
+                        if (callback) callback(canceled);
+                    }
+                });
+
+            } else if (force === undefined || (force !== undefined && force === false)) {
+                this.togglingSideMenu = true;
+                that.css3animate(els, {
+                    x: "0px",
+                    time: time,
+                    complete: function(canceled) {
+                        // els.removeClass("on");
+                        els.vendorCss("Transition", "");
+                        els.vendorCss("Transform", "");
+                        that.togglingSideMenu = false;
+                        if (callback) callback(canceled);
+                        menu.hide();
+                    }
+                });
+            }
+        },
         /**
          * Disables the side menu
            ```
@@ -3762,6 +3805,7 @@
                 });
             } else els.removeClass("hasMenu");
             $.query("#menu").removeClass("tabletMenu");
+            $.query("#menu_right").removeClass("tabletMenu");
         },
         /**
          * Enables the side menu if it has been disabled
@@ -3773,6 +3817,7 @@
         enableSideMenu: function() {
             $.query("#content, #header, #navbar").addClass("hasMenu");
             $.query("#menu").addClass("tabletMenu");
+            $.query("#menu_right").addClass("tabletMenu");
         },
         /**
          *
@@ -3790,6 +3835,10 @@
         isSideMenuOn: function() {
 
             var menu = parseInt($.getCssMatrix($("#content")).e) > 1 ? true : false;
+            return this.isSideMenuEnabled() && menu;
+        },
+        isRightMenuOn: function() {
+            var menu = parseInt($.getCssMatrix($("#content")).e) < 0 ? true : false;
             return this.isSideMenuEnabled() && menu;
         },
 
@@ -3911,6 +3960,9 @@
         updateSideMenu: function(elems) {
             return this.updateSideMenuElements(elems);
         },
+        updateSideMenuRight: function(elems) {
+            return this.updateSideMenuElementsRight(elems);
+        },
         /**
          * Updates the elements in the side menu
            ```
@@ -3937,6 +3989,25 @@
             //Move the scroller to the top and hide it
             this.scrollingDivs.menu_scroller.hideScrollbars();
             this.scrollingDivs.menu_scroller.scrollToTop();
+        },
+        updateSideMenuElementsRight: function(elems) {
+            var that = this;
+            if (elems === undefined || elems === null) return;
+            var nb = $.query("#menu_scroller_right");
+            
+            if (this.prevMenuRight) {
+                this.prevMenuRight.insertBefore("#afui #menu_right");
+                this.prevMenuRight = null;
+            }
+
+            if (!$.is$(elems)) elems = $.query("#" + elems);
+
+            nb.html('');
+            nb.append(elems);
+            this.prevMenuRight = elems;
+            //Move the scroller to the top and hide it
+            this.scrollingDivs.menu_scroller_right.hideScrollbars();
+            this.scrollingDivs.menu_scroller_right.scrollToTop();
         },
         /**
          * Set the title of the current panel
@@ -4675,6 +4746,7 @@
             this.content = af.query("#content").get(0);
             this.header = af.query("#header").get(0);
             this.menu = af.query("#menu").get(0);
+            this.menu_right = af.query("#menu_right").get(0);
             //set anchor click handler for UI
             this.viewportContainer.on("click", "a", function(e) {
                 checkAnchorClick(e, e.currentTarget);
@@ -4706,7 +4778,7 @@
                         //not exact, can be a little above the actual value
                         //but we haven't found an accurate way to measure it and this is the best so far
                         paddingBottom = jQactive.offset().bottom - jQel.offset().bottom;
-                        that.scrollingDivs[that.activeDiv.id].setPaddings(paddingTop, paddingBottom);
+                        if (that.scrollingDivs[that.activeDiv.id] != undefined) that.scrollingDivs[that.activeDiv.id].setPaddings(paddingTop, paddingBottom);
 
                     } else if ($.os.android || $.os.blackberry) {
                         var elPos = jQel.offset();
@@ -4747,6 +4819,7 @@
                 }).get(0);
                 this.viewportContainer.append(this.menu);
                 this.menu.style.overflow = "hidden";
+                this.menu.style.display = "none";
                 this.scrollingDivs.menu_scroller = $.query("#menu_scroller").scroller({
                     scrollBars: true,
                     verticalScroll: true,
@@ -4774,6 +4847,43 @@
                     lockBounce: this.lockPageBounce
                 });
                 if ($.feat.nativeTouchScroll) $.query("#aside_menu_scroller").css("height", "100%");
+            }
+            
+            if (!this.menu_right) {
+                this.menu_right = $.create("div", {
+                    id: "menu_right",
+                    html: '<div id="menu_scroller_right"></div>'
+                }).get(0);
+                this.viewportContainer.append(this.menu_right);
+                this.menu_right.style.overflow = "hidden";
+                this.menu_right.style.display = "none";
+                this.scrollingDivs.menu_scroller_right = $.query("#menu_scroller_right").scroller({
+                    scrollBars: true,
+                    verticalScroll: true,
+                    vScrollCSS: "afScrollbar",
+                    useJsScroll: !$.feat.nativeTouchScroll,
+                    noParent: $.feat.nativeTouchScroll,
+                    autoEnable: true,
+                    lockBounce: this.lockPageBounce
+                });
+                if ($.feat.nativeTouchScroll) $.query("#menu_scroller_right").css("height", "100%");
+
+                this.asideMenuRight = $.create("div", {
+                    id: "aside_menu_right",
+                    html: '<div id="aside_menu_scroller_right"></div>'
+                }).get(0);
+                this.viewportContainer.append(this.asideMenuRight);
+                this.asideMenuRight.style.overflow = "hidden";
+                this.scrollingDivs.menu_scroller_right = $.query("#aside_menu_scroller_right").scroller({
+                    scrollBars: true,
+                    verticalScroll: true,
+                    vScrollCSS: "afScrollbar",
+                    useJsScroll: !$.feat.nativeTouchScroll,
+                    noParent: $.feat.nativeTouchScroll,
+                    autoEnable: true,
+                    lockBounce: this.lockPageBounce
+                });
+                if ($.feat.nativeTouchScroll) $.query("#aside_menu_scroller_right").css("height", "100%");
             }
 
             if (!this.content) {
@@ -4911,6 +5021,15 @@
                         that.updateSideMenuElements(that.defaultMenu);
                         that.prevMenu = that.defaultMenu;
                     }
+                    //setup second menu
+                    var secondMenu = $.query("nav").get(0);
+                    if (secondMenu) {
+                        
+                        that.defaultMenuRight = $(secondMenu);
+                        that.updateSideMenuElementsRight(that.defaultMenuRight);
+                        //that.prevMenuRight = that.defaultMenuRight;
+                    }
+                    
                     //get default header
                     that.defaultHeader = "defaultHeader";
                     $.query("#header").append($.create("header", {
@@ -4936,6 +5055,7 @@
                         $.query("#afui #content").addClass("hasMenu");
                         $.query("#afui #navbar").addClass("hasMenu");
                         $.query("#afui #menu").addClass("tabletMenu");
+                        $.query("#afui #menu_right").addClass("tabletMenu");
                     }
                     //go to activeDiv
                     var firstPanelId = that.getPanelId(defaultHash);

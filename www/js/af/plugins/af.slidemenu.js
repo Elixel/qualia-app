@@ -25,9 +25,9 @@
             max = $("#menu").width();
         });
 
-        $("#afui").bind("touchstart", function(e) {
-            startX = e.touches[0].pageX;
-            startY = e.touches[0].pageY;
+        af("#afui").bind("touchstart", function(e) {
+            startX = e.originalEvent.targetTouches[0].pageX;
+            startY = e.originalEvent.targetTouches[0].pageY;
 
             checking = false;
             doMenu=false;
@@ -51,9 +51,9 @@
             else 
                 doMenu=true;
              if(!doMenu) return;
-
-            var dx = e.touches[0].pageX;
-            var dy = e.touches[0].pageY;
+            
+            var dx = e.originalEvent.targetTouches[0].pageX;
+            var dy = e.originalEvent.targetTouches[0].pageY;
             //if (!menuState && dx < startX) return;
             //else if (menuState && dx > startX) return;
             if (Math.abs(dy - startY) > Math.abs(dx - startX)) {

@@ -41,7 +41,6 @@ var qualia = {
     login: function(email_address, callback) {
         var that = this;
         this.api("visitor","GET",{email:email_address},function(e) {
-            console.log(e);
             if (e.meta !== undefined) {
                 if (e.meta.total_count > 0) { // email does exist
                     callback(e.objects[0]);

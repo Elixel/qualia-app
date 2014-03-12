@@ -2,6 +2,7 @@ body:after{
     content:
         url(../img/icon-arrow-left.svg)
         url(../img/icon-arrow-right.svg)
+        url(../img/icon-arrow-right-menu.svg)
         url(../img/icon-back.svg)
         url(../img/icon-close.svg)
         url(../img/icon-dashboard-menu.svg)
@@ -18,6 +19,7 @@ body:after{
         url(../img/icon-information-menu.svg)
         url(../img/icon-information.white.svg)
         url(../img/icon-information.svg)
+        url(../img/icon-logout-menu.svg)
         url(../img/icon-menu.svg)
         url(../img/icon-mood-menu.svg)
         url(../img/icon-mood-white.svg)
@@ -39,5 +41,6 @@ body:after{
         url(../img/qualia-logo.png)
         url(../img/switch-mask.png)
         url(../img/warwick-logo.png)
+        url(../img/icon-no-events.svg)
     display:none;
 }
